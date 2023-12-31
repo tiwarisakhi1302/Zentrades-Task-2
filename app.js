@@ -1,3 +1,10 @@
+const delimiters = new Map([
+    ['comma', ','],
+    ['semicolon', ';'],
+]);
+
+let data = {};
+
 function forwardMoveSelectedItems() {
     var availableFields = document.getElementById('availableFields');
     var displayedFields = document.getElementById('displayedFields');
@@ -29,7 +36,7 @@ function onNextClick() {
     const fileType = document.getElementById('file_type').value;
     const characterEncoding = document.getElementById('character_encoding').value
     const delimiter = document.getElementById('delimiter').value;
-    const isHeaderChecked = document.getElementById('header_checkbox').value
+    const isHeaderChecked = document.getElementById('header_checkbox').checked;
 
     if (fileInput.files.length == 0) {
         alert('Please choose a file.');
@@ -38,29 +45,56 @@ function onNextClick() {
 
         const inputFileType = file.type;
 
-        if(!inputFileType.includes(fileType)){
+        if (!inputFileType.includes(fileType)) {
             alert('File Type does not match with input file format');
-        }else{
+            data = {};
+        } else {
             const reader = new FileReader();
+            reader.readAsText(file, characterEncoding);
 
             reader.onload = function (e) {
                 const fileContent = e.target.result;
 
-                // Parse the CSV content based on the delimiter
-                const rows = fileContent.split('\n').map(row => row.split(delimiter));
+                if (fileType == 'csv') {
+                    if (!isHeaderChecked) {
+                        alert('CSV file must contain headers');
+                    }
+                    else {
+                        const headers = fileContent.split('\n')[0].trim().split(delimiters.get(delimiter));
 
-                // Display the parsed content
-                document.getElementById('fileContent').innerText = JSON.stringify(rows, null, 2);
+                        data = fileContent.split('\n').filter((row, index) => (index > 0)).map(row => {
+                            const values = row.trim().split(delimiters.get(delimiter));
+                            const rowObject = {};
 
-                console.log(JSON.stringify(rows, null, 2));
+                            headers.forEach((header, index) => {
+                                rowObject[header.trim()] = values[index];
+                            });
+                            return rowObject;
+                        });
+                    }
+                    
+                } else if (fileType === 'json') {
+                    try {
+                        products = JSON.parse(fileContent).products;
+
+                        data = Object.keys(products).map(key => ({
+                            id: key,
+                            ...products[key]
+                        }));
+                    } catch (err) {
+                        console.error('Error parsing JSON:', err);
+                    }
+                }
+                if (data.length > 0) {
+                    sessionStorage.setItem('selectedFields', JSON.stringify(selectedFields));
+                    sessionStorage.setItem('data', JSON.stringify(data));
+
+                    window.location.href = 'result.html';
+                }
+                else {
+                    alert('No data found');
+                }
             };
-
-            // Read the file as text
-            reader.readAsText(file);
         }
     }
-
-    sessionStorage.setItem('selectedFields', JSON.stringify(selectedFields));
-
-    // window.location.href = 'result.html';
 }

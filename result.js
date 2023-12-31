@@ -1,37 +1,54 @@
-const apiUrl = 'https://s3.amazonaws.com/open-to-cors/assignment.json';
 const itemsPerPage = 10;
 
 async function fetchData(page = 1) {
     try {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-        const products = data.products;
+        let data = JSON.parse(sessionStorage.getItem('data'));
+        const selectedFields = JSON.parse(sessionStorage.getItem('selectedFields'));
 
-        const productArray = Object.keys(products).map(key => ({
-            id: key,
-            ...products[key]
-        }));
+        data.sort((a, b) => b.popularity - a.popularity);
 
-        productArray.sort((a, b) => b.popularity - a.popularity);
+        data = data.map(obj => {
+            const filteredObj = {};
+        
+            selectedFields.forEach(field => {
+                if (obj.hasOwnProperty(field)) {
+                    filteredObj[field] = obj[field];
+                }
+            });
+        
+            return filteredObj;
+        });
+        
+        const tableHeadersRow = document.getElementById('tableHeaders');
+        const tableBody = document.getElementById('tableBody');
+        tableHeadersRow.innerHTML = '';
+
+        selectedFields.forEach(field => {
+            const th = document.createElement('th');
+            th.textContent = field;
+            tableHeadersRow.appendChild(th);
+        });
 
         const startIndex = (page - 1) * itemsPerPage;
         const endIndex = startIndex + itemsPerPage;
-        const displayedProducts = productArray.slice(startIndex, endIndex);
+        const displayedProducts = data.slice(startIndex, endIndex);
 
-        const tableBody = document.getElementById('tableBody');
         tableBody.innerHTML = '';
 
         displayedProducts.forEach(product => {
             const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${product.title}</td>
-                <td>${product.price}</td>
-                <td>${product.popularity}</td>
-            `;
+
+            selectedFields.forEach(field => {
+                const cell = document.createElement('td');
+                cell.textContent = product[field] || '';
+                row.appendChild(cell);
+            });
+
             tableBody.appendChild(row);
         });
 
-        const totalPages = Math.ceil(productArray.length / itemsPerPage);
+        // Pagination
+        const totalPages = Math.ceil(data.length / itemsPerPage);
         const pagination = document.getElementById('pagination');
         pagination.innerHTML = '';
 
