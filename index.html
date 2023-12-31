@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+<title>ZenTrades - Q2</title>
+</head>
+<body>
+    <div style="padding: 10px;">
+        <p style="text-align: left;">Import Products</p>
+        <table style="width: 100%; height:100%; padding: 10px; border: gray 3px; border-spacing: 14px; border-radius: 2px;">
+            <tr>
+                <td style="border: 1px solid #ddd; vertical-align: top; padding-top: 25px; width:50%; padding-left: 25px;">
+                    <table>
+                        <tr>
+                            <td style="padding:5px">Step 1:</td>
+                            <td style="padding-left:15px">Select File</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style="padding-left:15px">
+                                <input type="file" id="input_file" accept=".csv, .json">
+                            </td>
+                        </tr>
+                        <tr style="padding-top: 30px;">
+                            <td></td>
+                            <td style="padding-left:15px">
+                                <p>Supported File Type(s): .CSV, .JSON</p>
+                            </td>
+                    </table>
+                </td>
+                <td style="border: 1px solid #ddd; vertical-align: top; padding-top: 25px; padding-left: 25px;">
+                    <table>
+                        <tr>
+                            <td style="padding:5px">Step 2:</td>
+                            <td style="padding-left:15px">Specify Format</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style="padding-left:15px">
+                            <p>File Type</p>
+                            </td>
+                            <td style="padding-left: 30px;">
+                            <select style="width:180px; padding-top: 1.5px; padding-bottom: 1px;" id="file_type" size="1">
+                                <option value="csv">CSV</option>
+                                <option value="json">JSON</option>
+                            </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style="padding-left:15px">
+                            <p>Character Encoding</p>
+                            <td style="padding-left: 30px;">
+                                <select style="width:180px; padding-top: 1.5px; padding-bottom: 1px;" id="character_encoding" size="1">
+                                <option value="utf8">UTF-8</option>
+                                <option value="utf16">UTF-16</option>
+                            </select>
+                            </td>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style="padding-left:15px">
+                            <p>Delimiter</p>
+                            </td>
+                            <td style="padding-left: 30px;">
+                                <select style="width:180px; padding-top: 1.5px; padding-bottom: 1px;" id="delimiter" size="1">
+                                <option value="comma">comma</option>
+                                <option value="semicolon">semicolon</option>
+                            </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style="padding-left:15px">
+                                <p>Has Header</p>
+                            </td>
+                            <td style="width:180px;padding-left: 30px;">
+                                <input type="checkbox" id="header_checkbox" checked>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="2" style="border: 1px solid #ddd; vertical-align: top; padding: 25px; ">
+                    <table>
+                        <tr>
+                            <td style="padding:5px"><input type="checkbox" checked>Step 3:</td>
+                            <td style="padding-left:15px">Display Handling</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td style="padding-left:15px">
+                                Select the fields to be displayed
+                            </td>
+                        </tr>
+                        <tr style="padding-top: 30px;">
+                            <td></td>
+                            <td style="padding-left:15px">
+                                <table>
+                                    <tr>
+                                        <td>Available Fields</td>
+                                        <td></td>
+                                        <td>Fields to be displayed</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <div class="remove_scrolling_bar">
+                                            <select id="availableFields" style="width:133px"multiple size="9">
+                                                <option value="prod_id">Product Id</option>
+                                                <option value="subcategory">Subcategory</option>
+                                                <option value="title">Title</option>
+                                                <option value="price">Price</option>
+                                                <option value="popularity">Popularity</option>
+                                                <option value="description">Description</option>
+                                                <option value="rating">Rating</option>
+                                                <option value="utm_source">UTM Source</option>
+                                                <option value="utm_medium">UTM Medium</option>
+                                            </select>
+                                        </div>
+                                        </td>
+                                        <td style="padding: 14px;">
+                                            <table>
+                                            <tr>
+                                            <td><button onclick="forwardMoveSelectedItems()">>></button></td>
+                                            </tr>
+                                            <tr>
+                                            <td><button onclick="backwardMoveSelectedItems()"><<</button></td>
+                                            </tr>
+                                            </table>
+                                        </td>
+                                        <td>
+                                            <div class="remove_scrolling_bar">
+                                            <select id="displayedFields" style="width:165px; height:174px"multiple size="9">
+                                            </select>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        <div style=" width:100%; justify-content: right;">
+        <button style="background-color: #198754; color: white; padding: 8px; border-color: white;" onclick="onNextClick()"><b>Next</b></button>
+        <button style="background-color: white; color: red; padding: 8px; border-color: white;"><b>Cancel</b></button>
+    </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
